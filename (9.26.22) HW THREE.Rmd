@@ -1,0 +1,52 @@
+---
+title: "Homework Three"
+author: "Lisa Chiobi"
+date: "9/26/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Question One: Pick a timeseries (TS) from R packages (fpp, fpp2, base to name a few)
+
+For this homework assignment, I chose the 'ausgdp' data set to analyze. As someone who has recently developed an interest in the overall economy after reports of an upcoming recession, I felt like this data set would be very interesting to analyze. After running the attributes code, I determined that this data set has a quarterly time series (ie. a time series of 4), and good to use for this homework assignment.
+
+
+#### Question Two: Describe the TS
+
+The description of the The 'ausgdp' time series under format states that 'ausgdp' time series is the "quarterly australian gdp per capita 1971:1 - 1998:1". I was also able to find this information by using the attributes code, as under the $tsp output states that the start and end date for the time series is 1971.5 and 1998 respectively. In addition, the attributes output notes that this data set has a "4" time series.
+
+#### Question Three: Plot the TS and guess what the Acf plot would look like
+
+plot(ausgdp)
+
+After reviewing the plotted ausgdp graph, it is a very clear what the ACF graph will look like in regards to trend. Although there was a bit of inconsistency from 1977-1978, 1982-1984, and 1991-1992, the overall trend of the graph is positive. This makes sense, as the GDP of a country usually increases year over year in a growing economy. When doing a little more research in Australian economic history, it seems like in the early  80's, due to tight monetary policy. there was a recession which explains the dip in GDP. This also aligned with the recession in the US which also happened in the early 80s.
+
+In regards to seasonality, GDP is typically not something that has a seasonality to it. There are usually ups and downs and can be cyclical, but given the trend of the graph and the knowledge I have around GDP, I do not predict that were will be any seasonality shown in the acf graph. In addition, if seasonality was present, the timing of dips and increases would be similiar from year to year.
+
+#### Question Four:  Do a Acf plot. What insight is the Acf plot providing about your TS.
+
+acf(ausgdp)
+
+Given the clear trend in the ACF plot, the insights this Acf plot provides supports my conclusion that there is a trend. But, after looking at the plot it seems that I was incorrect about the seasonality, as there looks to be a seasonality aspect of the data. The Acf plot is a much easier visual to see both trend and seasonality, and in the plotting of the ausgdp, there seems to be both.
+
+#### Question Five: Forecast using HoltWinters and see what the accuracy is
+
+ausx <- forecast(ausgdp)
+accuracy (ausx)
+
+ausy <- HoltWinters(ausgdp)
+plot(ausy)
+
+Based on the Holt-Winters plot, the graph is extremely accurate and almost spot on after 1993.
+
+#### Question Six: Explain why you took the whole TS or part of it for ACF and forecasting
+
+I took the entire time series for the ACF because there were no significant outlines in the data set. There was an overall positive trend, and although there were a few dips, none were significant enough to be removed for the time series.
+
+
+
