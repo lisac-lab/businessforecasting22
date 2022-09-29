@@ -1,0 +1,72 @@
+---
+title: "Homework Four - Lisa Chiobi"
+author: "lc1094@scarletmail.rutgers.edu"
+date: "9/29/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+library(fpp)
+library(fpp2)
+library(TTR)
+
+attributes(ausgdp)
+plot(ausgdp)
+Acf(ausgdp)
+
+#take Mean of all available history
+
+mean_forecast <- meanf(ausgdp,5)
+plot(mean_forecast)
+
+# Naive
+naive_forecast <- naive(ausgdp,5)
+plot(naive_forecast)
+
+# Random Walk
+rwf_forecast <- rwf(ausgdp,5)
+rwf_forecast <- rwf(ausgdp,5, drift=TRUE)
+
+# Seasonal Naive
+snaive_forecast <- snaive(ausgdp,5)
+
+# Moving Averages
+
+MA5_forecast <- ma(ausgdp,order=5)
+MA9_forecast <- ma(ausgdp,order=9)
+
+# plot all in a single chart
+plot(mean_forecast)
+lines(naive_forecast$mean,col="red")
+lines(rwf_forecast$mean,col="green")
+lines(snaive_forecast$mean,col="black")
+lines(MA5_forecast,col="Pink")
+lines(MA9_forecast,col="Blue")
+
+# what other attributes are there?
+attributes(naive_forecast)
+
+# Decomposition
+ets_forecast <- ets(ausgdp)
+plot(ets_forecast)
+attributes(ets_forecast)
+ets_forecast$mse
+
+# HoltWinters
+HW_forecast <- HoltWinters(ausgdp)
+plot(HW_forecast)
+SSE_Simple <- HoltWinters(ausgdp,beta=FALSE,gamma=FALSE)
+attributes(SSE_Simple)
+plot(SSE_Simple)
+SSE_Simple$SSE
+head(SSE_Simple$fitted)
+
+#Forecast
+forecast_ets_1 <- forecast.ets(ets_forecast, h=5)
+plot(forecast_ets_1)
+forecast_ets_2 <- forecast(ets_forecast, h=5)
+plot(forecast_ets_2)
+```
+
