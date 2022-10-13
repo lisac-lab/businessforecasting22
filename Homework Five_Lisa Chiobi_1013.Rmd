@@ -1,0 +1,64 @@
+---
+title: "Homework Five"
+author: "lc1094@scarletmail.rutgers.edu"
+date: "10/13/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+  
+```{r}
+library(fpp)
+library(fpp2)
+
+?ausgdp
+
+head(ausgdp)
+#This "head" code outlines the first set/line of information of the data set. Given the description of "ausgdp" is the Quarterly Australian GDP per capita, 1971:1 - 1998:1, it makes sense that the information is given on a quarterly format, and starts with the year 1971. In this description, it doesn't note which month this data starts in, so the output of the "head" code is helpful as it uncovers that the data starts mid year and not the start of 1971. 
+
+plot(ausgdp)
+#The plot of the graph helps uncover any trends or seasonality. After reviewing the graph there is a clear upward and positive trend - which makes sense as over the years its expected for the GDP of a country to grow unless there is a significant event like a economic recession.
+
+
+stl_decomp <- stl(ausgdp,s.window ="periodic")
+plot(stl_decomp)
+attributes(stl_decomp)
+#The stl code is used to Decompose a time series into seasonal, trend and irregular components using loess, acronym STL." Although decomposition is not best used for forecasting, this code and decomposition overall, is helpful to understand Trend, Seasonality, and Cyclical/Irregular times series. Decomposition helps as it removes the aspect of seasonality and shows the four aspects visually. The first visual shows the raw data, similar to what is show in the "plot code". The third panel shows the trend, and as mentioned above, there is a clear trend for the GDP in Australia, and the third visual confirms that. The second visual helps determine if the seasonality is additive or multiplicative. Given the seasonality graph does not vary in length, I believe that this data set is additive. 
+
+# Lets print out a seasonal adjustment: The seasonal adjusted code "Returns seasonally adjusted data constructed by removing the seasonal component." Comparing the actual data set and the seasonal adjusted, the data is fairly similar, which means the seasonality in the data is fairly low. If the numbers were significantly different, then seasonality of the data would be high.
+
+?seasadj
+
+seasadj(stl_decomp)
+
+print(ausgdp)
+
+# Plot a line on the graph
+plot(ausgdp)
+
+lines(seasadj(stl_decomp), col="Red")
+
+# Default period forecast
+f_stl <- forecast(stl_decomp)
+
+# you can pass the # of period: 
+f_stl <- forecast(stl_decomp,h=15)
+f_stl
+plot(f_stl)
+
+
+# There is more than one way to do things
+decomp_ausgdp <- decompose(ausgdp)
+
+# Each one shows different attributes 
+attributes(decomp_ausgdp)
+seasadj(decomp_ausgdp)
+
+```
+
+
+
+
+
+
+
