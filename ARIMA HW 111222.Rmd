@@ -1,0 +1,49 @@
+---
+title: "ARIMA HW"
+author: "lc1094@scarletmail.rutgers.edu"
+date: "11/12/2022"
+output: html_document
+---
+
+```{r}
+library(fpp)
+library(fpp2)
+library(fpp3)
+library(forecast)
+
+#For this assignment I'll be using the ausgdp data set. This data is the Quarterly Australian GDP per capita, from 1971 to 1998. 
+
+austimeseries <- ts(ausgdp)
+
+plot(austimeseries)
+acf(austimeseries)
+
+#When plotting this time series, there is a clear trend in the data, it's a bit difficult to really see if the data is seasonal. This is helpful to understand as ARIMA only works on stationary data. If there is a seasonal component, then it will be necessary to include a difference. When plotting the acf of the time series, it is clear that there is no seasonality in the data. To double check, I used the nsdiffs function, and the code came back with a note "Error in nsdiffs(austimeseries) : Non seasonal data". Therefore, for this data I will pulling the information the tradiational way, and will not move forward with any seasonality steps.
+
+ndiffs(ausgdp)
+
+#As mentioned above, although there was no seasonality in the data, the data had a trend and was no stationary. As a result, only one difference is needed for this data set. 
+
+tsdisplay(austimeseries)
+austimeseriesdiff1 <- diff(austimeseries, differences=1)
+plot(austimeseriesdiff1)
+tsdisplay(austimeseriesdiff1)
+
+#After plotting the time series graph after adding in the one difference, it's clear the change it had on the data. The obvious trend that was shown in the data is no longer there, and the data is more randomized with no trend present. As a result, its clear that the difference was able to make the data more stationary and less seasonal/trend-like. The ACF and PACF show a similar story as every line of data passed the level of significance in the orginal data set, but now after the differencing, there are Tthree points that pass both the ACF graph and pACF graph. The ACF is tied to the MA component of the data, and as a result the options are 0,1,2,and 3. For the pACF, which is tied to the AR componet, and the options are also 0,1,2, and 3.
+
+ausauto_fit <- auto.arima(austimeseries, trace=TRUE, stepwise = FALSE)
+ausauto_fit
+attributes(ausauto_fit)
+
+# After running the data through auto.arima , the best model/model determined to have the least amount of parameters was ARIMA (2,1,3) with drift, which equates to 882.7547. This is within the 0,1,2,3 options both the pACF and ACF graphs showed.
+
+#Residual Analysis
+Acf(ausauto_fit$residuals)
+Box.test(residuals(ausauto_fit), lag=20, type="Ljung")
+plot.ts(residuals(ausauto_fit))
+hist(ausauto_fit$residuals)
+tsdiag(ausauto_fit)
+
+#Given the minimal amount of the lines that pass the ACF in the residuals chart, the box test which showed the p-value was above.05, the plot which show the data being very random, the histogram showing a bell shaped curve, it is clear that there is no pattern in the data 
+
+```
